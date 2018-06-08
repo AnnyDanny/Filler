@@ -30,9 +30,77 @@ void		clear_struct(t_info *s)
 	s->position = 0;
 }
 
-int	check_position_in_map(t_info *s)
+void check_size(char *buff, t_info *s, int fd)
 {
-	printf("\nok\n");
+	int i;
+
+	i = 0;
+	s->height = ft_atoi(&buff[8]);
+	s->width = ft_atoi(&buff[11]);
+	printf("width>>>%d\n", s->width);
+	printf("height>>>%d\n", s->height);
+	s->map = (char**)malloc(sizeof(char*) * (s->height + 1));
+	while (i < s->height)
+	{
+		get_next_line(fd, &buff);
+		s->map[i] = ft_strdup(buff + 4);
+		i++;
+	}
+	s->map[i] = NULL;
+	i = 0;
+	printf("\nmap>>>\n");
+	while (s->map[i])
+	{
+		printf("%s\n", s->map[i]);
+		i++;
+	}
+}
+
+void	ft_check_name(char *str, t_info *s)
+{
+	if (ft_strstr(str, "gdanylov.filler") && ft_atoi(&str[10]) == 1)
+	{
+		s->my = 'O';
+		s->other = 'X';
+	}
+	else if (ft_strstr(str, "gdanylov.filler") && ft_atoi(&str[10]) == 2)
+	{
+		s->my = 'X';
+		s->other = 'O';
+	}
+	printf("my>>>%c\n", s->my);
+	printf("other>>>>%c\n", s->other);
+}
+
+void check_figure(char *buff, t_info *s, int fd)
+{
+	int i;
+
+	i = 0;
+	while (!ft_isdigit(buff[i]))
+		i++;
+	s->height_fig = ft_atoi(&buff[i]);
+	s->width_fig = ft_atoi(ft_strrchr(buff, ' ') + 1);
+	i = 0;
+	s->fig = (char**)malloc(sizeof(char*) * s->height_fig + 1);
+	while (i < s->height_fig)
+	{
+		get_next_line(fd, &buff);
+		s->fig[i] = ft_strdup(buff);
+		i++;
+	}
+	s->fig[i] = NULL;
+	i = 0;
+	printf("\nfig>>>\n");
+	while (s->fig[i])
+	{
+		printf("%s\n", s->fig[i]);
+		i++;
+	}
+}
+
+void check_position_in_map(t_info *s)
+{
 	if (s->my == 'O')
 	{
 		if (s->start_o_y < s->start_x_y)
@@ -42,66 +110,19 @@ int	check_position_in_map(t_info *s)
 	}
 	if (s->my == 'X')
 	{
-		printf("\nok1\n");
 		if (s->start_x_y < s->start_o_y)
 			s->position = 2;
 		else if (s->start_x_y > s->start_o_y)
 			s->position = 1;
 	}
-	printf("position:%d\n", s->position);
-	if (s->position == 1)
-		return (1);
-	else
-		return (2);
-	return (0);
+	printf("my position>>>%d\n", s->position);
+
 }
 
-void walk_in_map(t_info *s)
+void check_start_position(t_info *s)
 {
-	int i;
-	int j;
-
-	if (check_position_in_map(&s) == 1)
-	{
-		i = 0;
-		while (s->map[i])
-		{
-			j = 0;
-			while (s->map[i][j])
-			{
-				if (s->map[i] == '*')
-				j++;
-			}
-			i++;
-		}
-	}
-	else if (check_position_in_map(&s) == 1)
-	{
-		while 
-
-	}
-}
-
-void ft_check_name(char *str, t_info *s)
-{
-	// printf(">>%c\n", str[10]);
-	if (ft_strstr(str, "gdanylov.filler") && ft_atoi(&str[10]) == 1)
-	{
-		printf("str:%s\n", str);
-		s->my = 'O';
-		s->other = 'X';
-	}
-	else if (ft_strstr(str, "gdanylov.filler") && ft_atoi(&str[10]) == 2)
-	{
-		s->my = 'X';
-		s->other = 'O';
-	}
-}
-
-void 	check_start_position(t_info *s)
-{
-	int y;
 	int x;
+	int y;
 
 	y = 0;
 	while (s->map[y])
@@ -123,96 +144,74 @@ void 	check_start_position(t_info *s)
 		}
 		y++;
 	}
-	printf("x_x:%d\n", s->start_x_x);
-	printf("x_y:%d\n", s->start_x_y);
-	printf("o_x:%d\n", s->start_o_x);
-	printf("o_y:%d\n", s->start_o_y);
+	printf("x_x>>>\n%d\n", s->start_x_x);
+	printf("x_y>>>\n%d\n", s->start_x_y);
+	printf("o_x>>>\n%d\n", s->start_o_x);
+	printf("o_y>>>\n%d\n", s->start_o_y);
 }
 
-void check_size(char *buff, t_info *s)
+// void walk_in_map(t_info *s)
+// {
+// 	int a;
+// 	int b;
+// 	int c;
+// 	int d;
+
+// 	while (b < y - j)
+// 	{
+// 		a = 0;
+// 		while (a < x - i)
+// 		{
+// 			c = 0;
+// 			if (op == 0 && my == 1)
+// 				coords(a,b);
+// 			op = 0;
+// 			my = 0;
+// 			a++;
+// 			while (d < i)
+// 			{
+// 				if (map[a][b] == my && piece[d] == '*')
+// 					my++;
+// 				if (map[a][b] == 'op' && piece[c][d] == '*')
+// 					++op;
+// 				++d;
+// 			}
+// 			++c;
+// 		}
+// 		b++;
+// 	}
+// }
+
+void check_other_func(t_info *s)
 {
-	int i;
-
-	i = 0;
-	// printf("\nok\n");
-	s->height = ft_atoi(&buff[8]);
-	s->width = ft_atoi(&buff[11]);
-	// printf("width = %d\n", s->width);
-	// printf("height = %d\n", s->height);
-	s->map = (char**)malloc(sizeof(char*) * s->height + 1);
-	get_next_line(0, &buff);
-	while (i < s->height)
-	{
-		get_next_line(0, &buff);
-		s->map[i] = ft_strdup(buff + 4);
-		i++;
-	}
-	// check_start_position(s);
-	// check_position_in_map(s);
-	s->map[i] = NULL;
-	i = 0;
-	printf("\nmap>>>\n");
-	while (s->map[i])
-	{
-		printf("%s\n", s->map[i]);
-		i++;
-	}
-}
-
-void check_figure(char *buff, t_info *s)
-{
-	int i;
-	i = 0;
-
-	while (!ft_isdigit(buff[i]))
-		i++;
-	s->height_fig = ft_atoi(&buff[i]);
-	s->width_fig = ft_atoi(ft_strrchr(buff, ' ') + 1);
-	printf("height_fig = %d\n", s->height_fig);
-	printf("width_fig = %d\n", s->width_fig);
-	i = 0;
-	s->fig = (char**)malloc(sizeof(char*) * s->height_fig + 1);
-	// get_next_line(0, &buff);
-	while (i < s->height_fig)
-	{
-		get_next_line(0, &buff);
-		s->fig[i] = ft_strdup(buff);
-		i++;
-	}
-	s->fig[i] = NULL;
-	write(1, "#\n", 2);
-	i = 0;
-	printf("\nfig>>>>>\n");
-	while (s->fig[i])
-	{
-		printf("%s\n", s->fig[i]);
-		i++;
-	}
 	check_start_position(s);
 	check_position_in_map(s);
-	walk_in_map(s);
+	// walk_in_map(s);
 }
 
 int main(void)
 {
 	t_info s;
-	// int i;
-	char *buff;
+	int fd;
+	
 	clear_struct(&s);
-	// s = ft_memalloc(sizeof(t_info));
-	while (get_next_line(0, &buff))
+	char *buff;
+	fd = open("vika", O_RDONLY);
+	while (get_next_line(fd, &buff))
 	{
-		// printf("buff:%s\n", buff);
 		if (!ft_strncmp(buff, "$$$ exec ", 9))
+		{
 			ft_check_name(buff, &s);
-		if (!ft_strncmp(buff, "Plateau ", 8))
-			check_size(buff, &s);
+		}
+		if (!strncmp(buff, "Plateau ", 8))
+		{
+			check_size(buff, &s, fd);
+		}
 		if (!ft_strncmp(buff, "Piece ", 6))
-			check_figure(buff, &s);
-		// break;
-		// printf("%s\n", buff);
+		{
+			check_figure(buff, &s, fd);
+		}
 	}
-	// get_next_line(0, &buff);
-	printf("\nbuff2:%s\n", buff);
+	check_other_func(&s);
 	return (0);
 }
