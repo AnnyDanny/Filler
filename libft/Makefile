@@ -13,7 +13,8 @@ ft_itoa.c ft_putendl.c ft_putendl_fd.c ft_strdup.c ft_strncat.c ft_toupper.c \
 ft_memalloc.c ft_putnbr.c ft_strnequ.c ft_strncmp.c \
 ft_memccpy.c ft_putnbr_fd.c ft_strequ.c ft_strncpy.c ft_lstnew.c ft_lstdelone.c \
 ft_lstdel.c ft_lstadd.c ft_lstiter.c ft_lstmap.c ft_strlcat.c ft_sqrt.c \
-ft_swap.c ft_countstrclen.c ft_is_negative.c ft_print_numbers.c 
+ft_swap.c ft_countstrclen.c ft_is_negative.c ft_print_numbers.c get_next_line.c \
+
 OBJ = $(SRC:.c=.o)
 
 all: $(SRC) $(NAME)

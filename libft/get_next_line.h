@@ -10,20 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FILLER_H
-# define FILLER_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-# include "libft/get_next_line.h"
-# include <fcntl.h>
+# include "includes/libft.h"
 
-typedef struct		s_fil
-{
-	int				x;
-	int				y;
-	struct s_fil	*next;
-}					t_fil;
+# define BUFF_SIZE 5
 
-typedef struct	s_s
+typedef struct	s_struct
 {
 	char		*t;
 	char		*d;
@@ -31,45 +25,8 @@ typedef struct	s_s
 	char		*buf;
 	char		*tmp;
 	t_list		*buf2;
-}				t_s;
+}				t_struct;
 
 int				get_next_line(const int fd, char **line);
-
-
-typedef struct	s_info
-{
-	char		my;
-	char 		other;
-	int			width_map;
-	int			height_map;
-	char 		**map;
-	int			width_fig;
-	int			height_fig;
-	char		**fig;
-	int			start_x_x;
-	int			start_x_y;
-	int			start_o_x;
-	int			start_o_y;
-	int			position;
-	int x_map;
-	int y_map;
-	int count;
-	int i_fig;
-	int j_fig;
-	int a_my;
-	int b_other;
-	int save;
-
-}				t_info;
-
-// void check_other_func(t_info *s);
-int				get_next_line(const int fd, char **line);
-void check_other_func(t_info *s);
-void check_start_position(t_info *s);
-void check_position_in_map(t_info *s);
-void check_figure(char *buff, t_info *s, int fd);
-void	ft_check_name(char *str, t_info *s);
-void check_size(char *buff, t_info *s, int fd);
-void walk_in_map(t_info *s);
 
 #endif

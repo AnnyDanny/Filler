@@ -40,3 +40,18 @@ t_list	*ft_lstnew(void const *content, size_t content_size)
 	vika->next = NULL;
 	return (vika);
 }
+
+
+// t_fil *listnew(int x, int y)
+// {
+// 	t_fil *coord;
+// 	int new_x;
+// 	int new_y;
+
+// 	if (!(coord = (t_fil*)malloc(sizeof(t_fil))))
+// 		return (0);
+// 	coord->x = x;
+// 	coord->y = y;
+// 	coord->next = NULL;
+// 	return (coord);
+// } 
