@@ -11,7 +11,8 @@
 /* ************************************************************************** */
 
 #include "filler.h"
-// #include "get_next_line.h"
+// #include <stdio.h>
+
 
 int fd;
 
@@ -30,9 +31,7 @@ t_fil *listnew(int x, int y)
 void		ft_add_end(t_fil **head, t_fil 	*node)
 {
 	t_fil 	*tmp;
-	
-
-	
+		
 	if (!head || !node)
 		return ;
 	tmp = (*head);
@@ -47,46 +46,41 @@ void		ft_add_end(t_fil **head, t_fil 	*node)
 	tmp->next = node;
 }
 
-void		free_arr(t_info *s)
-{
-	int 	i;
+// void		free_arr(t_info *s)
+// {
+// 	int 	i;
 
-	i = 0;
-	while(i < s->height_map)
-	{
-		ft_strdel(&(s->map[i]));
-		i++;
-	}
-	free(s->map);
-	while(i < s->height_fig)
-	{
-		ft_strdel(&(s->fig[i]));
-		i++;
-	}
-	free(s->fig);
-	s->fig = NULL;
-	s->map = NULL;
-}
-
-
-// fd = open("vika", O_RDWR, O_APPEND);
-
-
+// 	i = 0;
+// 	while(i < s->height_map)
+// 	{
+// 		ft_strdel(&(s->map[i]));
+// 		i++;
+// 	}
+// 	free(s->map);
+// 	while(i < s->height_fig)
+// 	{
+// 		ft_strdel(&(s->fig[i]));
+// 		i++;
+// 	}
+// 	free(s->fig);
+// 	s->fig = NULL;
+// 	s->map = NULL;
+// }
 
 
 int check_in_the_map(t_info *s)
 {
-	 int a = 0;
+	int a = 0;
 
 	s->j_fig = 0;
-	write(fd, "ok7\n", 4);
+
 	if (!(s->x_map + s->height_fig < s->height_map &&\
 	s->y_map + s->width_fig < s->width_map))
 	{
-		// write(fd, "ok8\n", 4);
+		// write(fd, "\n\nOK\n\n", 6);
 		return (0);
 	}
-	 while (s->j_fig < s->height_fig) //i < s->height_fig
+	 while (s->j_fig < s->height_fig)
 	 {
 	 	s->i_fig = 0;
 	 	while (s->i_fig < s->width_fig)
@@ -104,9 +98,9 @@ int check_in_the_map(t_info *s)
 	 	}
 	 	s->j_fig++;
 	 }
-	 if (a == 1)
-	 	return(1);
-	 return (0);
+	if (a == 1)
+		return(1);
+	return (0);
 }
 
 void distance(t_info *s, t_fil *head)
@@ -141,7 +135,6 @@ int print_list(t_fil *head)
 	i = 0;
 	while (head)
 	{
-		write(fd, "list1\n", 6);
 		ft_putnbr_fd(head->x, fd);
 		write(fd, " ", 1);
 		ft_putnbr_fd(head->y, fd);
@@ -175,25 +168,21 @@ void return_coord(t_info *s, t_fil *head)
 		s->x_map++;
 	}
 	
-	ft_putnbr_fd(s->res_x, 1);
-	write(1, " ", 1);
-	ft_putnbr_fd(s->res_y, 1);
-	write(1, "\n", 1);
-	write(fd, "\nfinal\n", 7);
-	ft_putnbr_fd(s->res_x, fd);
-	write(fd, "\n", 1);
-	ft_putnbr_fd(s->res_y, fd);
-	write(fd, "\n", 1);
-	free_arr(s);
-	clear_struct(s);
+	// ft_putnbr_fd(s->res_x, 1);
+	// write(1, " ", 1);
+	// ft_putnbr_fd(s->res_y, 1);
+	// write(1, "\n", 1);
+	// ft_putnbr_fd(s->res_x, fd);
+	// write(fd, "\n", 1);
+	// ft_putnbr_fd(s->res_y, fd);
+	// write(fd, "\n", 1);
+	// free_arr(s);
+	// clear_struct(s);
 }
-
-
 
 
  void walk_in_the_map(t_info *s)
 {
-	write(fd, "\nok2\n", 5);
 	t_fil		*head;
 	t_fil		*new;
 
@@ -202,14 +191,15 @@ void return_coord(t_info *s, t_fil *head)
 	s->x_map = 0;
 	while (s->x_map < s->height_map)
 	{
-		// write(fd, "\nok3\n", 5);
 		s->y_map = 0;
 		while (s->y_map < s->width_map)
 		{
-			// write(fd, "\nok4\n", 5);		
+			// printf("\n________\n");
+			// printf("\ns->x_map>>>%d\n", s->x_map);
+			// printf("\ns->y_map>>>%d_____\n", s->y_map);
+			// printf("\n________\n");
 			if (check_in_the_map(s) == 1)
 			{
-				write(fd, "\nok5\n", 5);
 				if (head == NULL)
 					head = listnew(s->x_map, s->y_map);
 				else
@@ -226,35 +216,6 @@ void return_coord(t_info *s, t_fil *head)
 	return_coord(s, new);
 }
 
-void check_size_plateau(char *buff, t_info *s)
-{
-	int i;
-
-	i = 0;
-	s->height_map = ft_atoi(&buff[8]);
-	s->width_map = ft_atoi(&buff[11]);
-	get_next_line(0, &buff);
-	ft_strdel(&buff);
-	s->map = (char**)malloc(sizeof(char*) * (s->height_map + 1));
-	while (i < s->height_map)
-	{
-		get_next_line(0, &buff);
-		s->map[i] = ft_strdup(buff + 4);
-		//ft_putendl_fd(s->map[i], fd);
-		ft_strdel(&buff);
-		i++;
-	}
-	check_start_position(s);
-	check_position_in_map(s);
-	get_next_line(0, &buff);
-	if (!ft_strncmp(buff, "Piece ", 6))
-	{
-		write(fd, "i am here3\n", 11);
-		check_figure(buff, s);
-	}
-}
-
-
 
 void check_figure(char *buff, t_info *s)
 {
@@ -270,54 +231,78 @@ void check_figure(char *buff, t_info *s)
 	while (i < s->height_fig)
 	{
 		get_next_line(0, &buff);
-
 		s->fig[i] = ft_strdup(buff);
-		//ft_putendl_fd(s->fig[i], fd);
 		ft_strdel(&buff);
 		i++;
 	}
 	s->fig[i] = NULL;
-	//write(fd, "\nbefore\n", 8);
+	// i = 0;
+	// printf("\nfig>>>\n");
+	// while (i < s->height_fig)
+	// {
+	// 	printf("\n%s\n", s->fig[i]);
+	// 	i++;
+	// }
+	// printf("\ns->height_fig>>>%d\n", s->height_fig);
+	// printf("\ns->width_fig>>>%d\n", s->width_fig);
+	// printf("\ns->height_map>>>%d\n", s->height_map);
+	// printf("\ns->width_map>>>%d\n", s->width_map);
 	walk_in_the_map(s);
 }
+
+void check_size_plateau(char *buff, t_info *s)
+{
+	int i;
+
+	i = 0;
+	s->height_map = ft_atoi(&buff[8]);
+	s->width_map = ft_atoi(&buff[11]);
+	get_next_line(fd, &buff);
+	ft_strdel(&buff);
+	s->map = (char**)malloc(sizeof(char*) * (s->height_map + 1));
+	while (i < s->height_map)
+	{
+		get_next_line(0, &buff);
+		s->map[i] = ft_strdup(buff + 4);
+		ft_strdel(&buff);
+		i++;
+	}
+	// i = 0;
+	// printf("\nmap>>>\n");
+	// while (i < s->height_map)
+	// {
+	// 	printf("\n%s\n", s->map[i]);
+	// 	i++;
+	// }
+	check_start_position(s);
+	check_position_in_map(s);
+}
+
 
 int main(void)
 {
 	t_info s;
 	
-	
 	clear_struct(&s);
 	char *buff;
 
-
-	// write(fd, "\nok\n", 4);
+	// fd = open("tat", O_RDONLY);
 	fd = open("vika3", O_RDWR | O_APPEND);
-	//write(fd, "i am here\n", 10);
 	 
 	while (get_next_line(0, &buff) > 0)
 	{
 		if (!ft_strncmp(buff, "$$$ exec ", 9))
 		{
-			//write(fd, "i am here1\n", 11);
 			ft_check_name(buff, &s);
 		}
-		else if (!strncmp(buff, "Plateau ", 8))
+		if (!strncmp(buff, "Plateau ", 8))
 		{
-			//write(fd, "i am here2\n", 11);
 			check_size_plateau(buff, &s);
 		}
-		// clear_struct(&s);
-		//ft_strdel(&buff);
-		// if (!ft_strncmp(buff, "Piece ", 6))
-		// {
-		// 	//write(fd, "i am here3\n", 11);
-		// 	check_figure(buff, &s);
-		// }
+		if (!ft_strncmp(buff, "Piece ", 6))
+		{
+			check_figure(buff, &s);
+		}
 	}
-	// clear_struct(&s);
-	//write(fd, "\nok9\n", 5);
-	// check_start_position(&s);
-	// check_position_in_map(&s);
-	// walk_in_the_map(&s);
 	return (0);
 }
