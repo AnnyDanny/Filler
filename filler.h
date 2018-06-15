@@ -59,6 +59,9 @@ typedef struct	s_info
 	int a_my;
 	int b_other;
 	int save;
+	int res_x;
+	int res_y;
+	int distance;
 
 }				t_info;
 
@@ -67,9 +70,18 @@ int				get_next_line(const int fd, char **line);
 void check_other_func(t_info *s);
 void check_start_position(t_info *s);
 void check_position_in_map(t_info *s);
-void check_figure(char *buff, t_info *s, int fd);
+void check_figure(char *buff, t_info *s);
 void	ft_check_name(char *str, t_info *s);
-void check_size(char *buff, t_info *s, int fd);
+void check_size(char *buff, t_info *s);
 void walk_in_map(t_info *s);
+
+
+void		clear_struct(t_info *s);
+
+int 	vrag(char c, t_info *s);
+int check_in_the_map(t_info *s);
+
+int my(char c, t_info *s);
+
 
 #endif

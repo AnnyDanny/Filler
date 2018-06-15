@@ -1,6 +1,4 @@
-seed = 8665
-X: timedout
-./filler.gdanylov: Segfault at 0
+seed = 6572
 ./players/abanlin.filler won
 Score:
-105AGAINST0
+118AGAINST1

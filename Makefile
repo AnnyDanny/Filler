@@ -1,7 +1,7 @@
-NAME = filler.gdanylov
+NAME = gdanylov.filler
 # HEADER = -c -I ./includes/
 FLAGS = -Wall -Wextra -Werror
-SRC = filler_read.c
+SRC = filler_read.c filler_2.c
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
