@@ -1,0 +1,1 @@
+./filler_vm -v -f ./maps/map00 -p1 ./gdanylov.filler -p2 $1 

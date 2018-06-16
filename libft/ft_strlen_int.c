@@ -1,23 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_strlen_int.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gdanylov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/10/24 20:47:55 by gdanylov          #+#    #+#             */
-/*   Updated: 2017/10/27 21:29:42 by gdanylov         ###   ########.fr       */
+/*   Created: 2018/06/07 02:34:07 by gdanylov          #+#    #+#             */
+/*   Updated: 2018/06/07 02:34:07 by gdanylov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "includes/libft.h"
+#include "ft_printf.h"
+#include <stdio.h>
+#include <stdarg.h>
+#include <unistd.h>
+#include <stdlib.h>
 
-size_t	ft_strlen(const char *str)
+int					ft_strlen_int(int num)
 {
-	size_t i;
+	char			*s;
+	int				i;
 
+	s = NULL;
 	i = 0;
-	while (str && str[i] != '\0')
+	s = ft_itoa(num);
+	while (s && s[i])
 		i++;
+	ft_strdel(&s);
 	return (i);
 }

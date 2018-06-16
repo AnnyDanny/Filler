@@ -14,6 +14,11 @@ ft_memalloc.c ft_putnbr.c ft_strnequ.c ft_strncmp.c \
 ft_memccpy.c ft_putnbr_fd.c ft_strequ.c ft_strncpy.c ft_lstnew.c ft_lstdelone.c \
 ft_lstdel.c ft_lstadd.c ft_lstiter.c ft_lstmap.c ft_strlcat.c ft_sqrt.c \
 ft_swap.c ft_countstrclen.c ft_is_negative.c ft_print_numbers.c get_next_line.c \
+main_printf.c \
+check_flags.c check_types.c ft_strlen_int.c \
+print_o_u.c add_o_u.c print_type_x_bx_p.c add_x_bx_p.c flags_x_bx_p.c print_uni_c.c \
+print_s.c add_unis_c.c print_type_uni_s.c print_d_i_bd.c add_fl_d_i_bd.c add_main_printf.c \
+check_flags1.c \
 
 OBJ = $(SRC:.c=.o)
 

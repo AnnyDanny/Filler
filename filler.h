@@ -76,10 +76,13 @@ void check_size(char *buff, t_info *s);
 void walk_in_map(t_info *s);
 
 
-void		clear_struct(t_info *s);
+void		cl_st(t_info *s);
 
-int 	vrag(char c, t_info *s);
-int check_in_the_map(t_info *s);
+int 	other(char c, t_info *s);
+int check_in_the_map(int x, int y, t_info *s);
+
+// delete
+void print_map_fig(char **map, int height, int width);
 
 int my(char c, t_info *s);
 

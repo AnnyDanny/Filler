@@ -88,6 +88,7 @@ void				ft_strclr(char *s);
 void				ft_putchar(char c);
 void				ft_memdel(void **ap);
 void				*ft_memalloc(size_t size);
-char				*ft_itoa(int n);
+char				*ft_itoa(long long n);
+int					ft_printf(char *format, ...);
 
 #endif

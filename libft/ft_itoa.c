@@ -11,8 +11,9 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
-static int	count(long long int i)
+static int	count(long long i)
 {
 	int k;
 
@@ -20,11 +21,8 @@ static int	count(long long int i)
 	if (i == 0)
 		return (1);
 	if (i < 0)
-	{
 		i = -i;
-		k++;
-	}
-	while (i > 0)
+	while (i >= 1)
 	{
 		i = i / 10;
 		k++;
@@ -32,30 +30,30 @@ static int	count(long long int i)
 	return (k);
 }
 
-char		*ft_itoa(int n)
+char		*ft_itoa(long long n)
 {
 	int				i;
-	long long int	l;
+	long long		l;
 	int				len;
 	char			*str;
 
+	str = NULL;
+	if (n < -9223372036854775807)
+		return (ft_strdup("9223372036854775808"));
 	i = 0;
 	l = n;
 	len = count(l);
-	if (!(str = (char *)malloc(sizeof(char) * len + 1)))
+	if (!(str = (char*)malloc(sizeof(char) * (len + 1))))
 		return (NULL);
-	if (l < 0)
-	{
-		str[0] = '-';
+	if (n < 0)
 		l = -l;
-	}
 	if (l == 0)
 		str[0] = '0';
 	str[len--] = '\0';
-	while (l)
+	while (l && len >= 0)
 	{
 		str[len] = l % 10 + '0';
-		l = l / 10;
+		l /= 10;
 		len--;
 	}
 	return (str);
