@@ -43,6 +43,7 @@ typedef struct	s_info
 	int			width_map;
 	int			height_map;
 	char 		**map;
+	char 		**tmp;
 	int			width_fig;
 	int			height_fig;
 	char		**fig;
@@ -78,13 +79,13 @@ void walk_in_map(t_info *s);
 
 void		cl_st(t_info *s);
 
-int 	other(char c, t_info *s);
+// int 	other(char c, t_info *s);
 int check_in_the_map(int x, int y, t_info *s);
 
 // delete
 void print_map_fig(char **map, int height, int width);
 
-int my(char c, t_info *s);
+// int my(char c, t_info *s);
 
 
 #endif

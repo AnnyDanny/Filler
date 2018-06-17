@@ -206,19 +206,19 @@ int fd;
 // 	}
 // }
 
-int other(char c, t_info *s)
-{
-	if (c == s->other || c == s->other + 32)
-		return (1);
-	return (0);
-}
+// int other(char c, t_info *s)
+// {
+// 	if (c == s->other || c == s->other + 32)
+// 		return (1);
+// 	return (0);
+// }
 
-int my(char c, t_info *s)
-{
-	if (c == s->my || c == s->my + 32)
-		return (1);
-	return (0);
-}
+// int my(char c, t_info *s)
+// {
+// 	if (c == s->my || c == s->my + 32)
+// 		return (1);
+// 	return (0);
+// }
 
 int check_in_the_map(int x, int y, t_info *s)
 {
@@ -236,9 +236,9 @@ int check_in_the_map(int x, int y, t_info *s)
 		{
 			if (s->fig[i][j] == '*')
 			{
-				if (other(s->map[y][x], s))
+				if (s->map[y][x] == 0)
 					return (0);
-				if (my(s->map[y][x], s))
+				if (s->map[y][x] == -2)
 					count++;
 				if (count > 1)
 					return (0);
@@ -296,8 +296,8 @@ void check_figure(char *buff, t_info *s)
 		i++;
 	}
 	s->fig[i] = NULL;
-	print_map_fig(s->fig, s->height_fig, s->width_fig);
-	print_map_fig(s->map, s->height_map, s->width_map);
+	// print_map_fig(s->fig, s->height_fig, s->width_fig);
+	// print_map_fig(s->map, s->height_map, s->width_map);
 	// i = 0;
 	// printf("\nfig>>>\n");
 	// while (i < s->height_fig)
@@ -312,6 +312,117 @@ void check_figure(char *buff, t_info *s)
 	walk_in_the_map(s);
 }
 
+void make_digits(t_info *s, int d)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (i < s->height_map)
+	{
+		j = 0;
+		while (j < s->width_map)
+		{
+			if (s->map[i][j] == -1)
+			{
+				if (j + 1 < s->width_map && s->map[i][j + 1] == d - 1)
+					s->map[i][j] = d;
+				if (j != 0 && s->map[i][j - 1] == d - 1)
+					s->map[i][j] = d;
+				if (i + 1 < s->height_map && s->map[i + 1][j] == d - 1)
+					s->map[i][j] = d;
+				if (i != 0 && s->map[i - 1][j] == d - 1)
+					s->map[i][j] = d;
+			}
+			j++;
+		}
+		i++;
+	}
+	i = 0;
+	j = 0;
+	while (i < s->height_map)
+	{
+		j = 0;
+		while (j < s->width_map)
+		{
+			dprintf(fd, "%3d", s->map[i][j]);
+			j++;
+		}
+		i++;
+		write(fd, "\n", 1);
+	}
+	write(fd, "\n", 1);
+}
+
+
+int check_minus_one(t_info *s)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (i < s->height_map)
+	{
+		j = 0;
+		while (j < s->width_map)
+		{
+			if (s->map[i][j] == -1)
+				return (1);
+			j++;
+		}
+		i++;
+	}
+	return (0);
+}
+
+void fill_distance(t_info *s)
+{
+	int d;
+
+	d = 1;
+	while (check_minus_one(s) == 1)
+	{
+		make_digits(s, d);
+		d++;
+	}
+}
+
+void fill_map(t_info *s)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (i < s->height_map)
+	{
+		j = 0;
+		while (j < s->width_map)
+		{
+			if (s->map[i][j] == '.')
+				s->map[i][j] = -1;
+			if (s->map[i][j] == s->my || s->map[i][j] == s->my + 32)
+				s->map[i][j] = -2;
+			if (s->map[i][j] == s->other || s->map[i][j] == s->other + 32)
+				s->map[i][j] = 0;
+			j++;
+		}
+		i++;
+	}
+	// i = 0;
+	// j = 0;
+	// while (i < s->height_map)
+	// {
+	// 	j = 0;
+	// 	while (j < s->width_map)
+	// 	{
+	// 		dprintf(fd, "%d", s->map[i][j]);
+	// 		j++;
+	// 	}
+	// 	i++;
+	// 	write(fd, "\n", 1);
+	// }
+}
+
 void check_size_plateau(char *buff, t_info *s)
 {
 	int i;
@@ -322,13 +433,17 @@ void check_size_plateau(char *buff, t_info *s)
 	get_next_line(0, &buff);
 	ft_strdel(&buff);
 	s->map = (char**)malloc(sizeof(char*) * (s->height_map + 1));
+	s->tmp = (char**)malloc(sizeof(char*) * (s->height_map + 1));
 	while (i < s->height_map)
 	{
 		get_next_line(0, &buff);
 		s->map[i] = ft_strdup(buff + 4);
+		s->tmp[i] = ft_strdup(buff + 4);
 		ft_strdel(&buff);
 		i++;
 	}
+	fill_map(s);
+	fill_distance(s);
 	// get_next_line(0, &buff);
 	// if (!ft_strncmp(buff, "Piece ", 6))
 	// {

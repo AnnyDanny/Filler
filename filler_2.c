@@ -8,6 +8,7 @@ void		cl_st(t_info *s)
 	s->width_map = 0;
 	s->height_map = 0;
 	s->map = NULL;
+	s->tmp = NULL;
 	s->width_fig = 0;
 	s->height_fig = 0;
 	s->fig = NULL;
