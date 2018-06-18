@@ -63,6 +63,9 @@ typedef struct	s_info
 	int res_x;
 	int res_y;
 	int distance;
+	int coord_x;
+	int coord_y;
+	int check_coord;
 
 }				t_info;
 

@@ -28,6 +28,9 @@ void		cl_st(t_info *s)
 	s->res_x = 0;
 	s->res_y = 0;
 	s->distance = -1;
+	s->coord_x = 0;
+	s->coord_y = 0;
+	s->check_coord = 0;
 }
 
 

@@ -220,6 +220,15 @@ int fd;
 // 	return (0);
 // }
 
+// int check_coord_in_map(int y, int x)
+// {
+// 	if (y == 0)
+// 		return (1);
+// 	if (x == 0)
+// 		return (2);
+// 	return (0);
+// }
+
 int check_in_the_map(int x, int y, t_info *s)
 {
 	int i = 0;
@@ -236,10 +245,17 @@ int check_in_the_map(int x, int y, t_info *s)
 		{
 			if (s->fig[i][j] == '*')
 			{
-				if (s->map[y][x] == 0)
+				if (s->map[y][x] == s->other || s->map[y][x] == s->other + 32)
 					return (0);
-				if (s->map[y][x] == -2)
+				if (s->map[y][x] == s->my || s->map[y][x] == s->my + 32)
+				{
+					// s->map[y][x] = s->tmp[y][x];
 					count++;
+				}
+				// if (check_coord_in_map(y, x) == 1)
+					// y = s->height_map - 1;
+				// if (check_coord_in_map(y, x) == 2)
+					// x = s->width_map - 1;
 				if (count > 1)
 					return (0);
 			}
@@ -250,14 +266,82 @@ int check_in_the_map(int x, int y, t_info *s)
 		y++;
 	}
 	if (count == 1)
+	{
+		// s->check_coord++;
 		return (1);
+	}
 	return (0);
 }
 
+int count_coord_one(s, int y, int x)
+{
+	int weight;
+	int i;
+	int j;
+
+	i = 0;
+	weight = 0;
+	while (i < s->height_fig)
+	{
+		j = 0;
+		while (j < s->width_fig)
+		{
+			if (s->fig[i][j] == '*')
+				weight += s->tmp[y][x];
+			j++;
+		}
+		i++;
+	}
+	return (weight);
+}
+
+int count_coord_second(s, int y, int x)
+{
+	int weight;
+	int i;
+	int j;
+
+	i = 0;
+	weight = 0;
+	while (i < s->height_fig)
+	{
+		j = 0;
+		while (j < s->width_fig)
+		{
+			if (s->fig[i][j] == '*')
+				weight += s->tmp[s->coord_y][s->coord_x];
+			j++;
+		}
+		i++;
+	}
+	return (weight);
+}
+
+int check_best_coord(t_info *s, int y, int x)
+{
+	int a;
+	int b;
+
+	a = 0;
+	b = 0;
+	if (s->check_coord == 1)
+	{
+		a = count_coord_one(s, int y, int x);
+		b = count_coord_second(s);
+	}
+	else
+	{
+		s->coord_y = y;
+		s->coord_x = x;
+		s->check_coord = 1;
+	}
+		
+}
 
 void walk_in_the_map(t_info *s)
 {
 	int y = 0;
+	s->check_coord = 0;
 
 	while (y <= s->height_map - s->height_fig)
 	{
@@ -266,8 +350,9 @@ void walk_in_the_map(t_info *s)
 		{
 			if (check_in_the_map(x, y, s) == 1)
 			{
-				ft_printf("%d %d\n", y, x);
-				return ;
+				check_best_coord(s, y, x);
+				// ft_printf("%d %d\n", y, x);
+				// return ;
 			}
 			x++;
 		}
@@ -323,16 +408,16 @@ void make_digits(t_info *s, int d)
 		j = 0;
 		while (j < s->width_map)
 		{
-			if (s->map[i][j] == -1)
+			if (s->tmp[i][j] == -1)
 			{
-				if (j + 1 < s->width_map && s->map[i][j + 1] == d - 1)
-					s->map[i][j] = d;
-				if (j != 0 && s->map[i][j - 1] == d - 1)
-					s->map[i][j] = d;
-				if (i + 1 < s->height_map && s->map[i + 1][j] == d - 1)
-					s->map[i][j] = d;
-				if (i != 0 && s->map[i - 1][j] == d - 1)
-					s->map[i][j] = d;
+				if (j + 1 < s->width_map && s->tmp[i][j + 1] == d - 1)
+					s->tmp[i][j] = d;
+				if (j != 0 && s->tmp[i][j - 1] == d - 1)
+					s->tmp[i][j] = d;
+				if (i + 1 < s->height_map && s->tmp[i + 1][j] == d - 1)
+					s->tmp[i][j] = d;
+				if (i != 0 && s->tmp[i - 1][j] == d - 1)
+					s->tmp[i][j] = d;
 			}
 			j++;
 		}
@@ -345,7 +430,7 @@ void make_digits(t_info *s, int d)
 		j = 0;
 		while (j < s->width_map)
 		{
-			dprintf(fd, "%3d", s->map[i][j]);
+			dprintf(fd, "%3d", s->tmp[i][j]);
 			j++;
 		}
 		i++;
@@ -366,7 +451,7 @@ int check_minus_one(t_info *s)
 		j = 0;
 		while (j < s->width_map)
 		{
-			if (s->map[i][j] == -1)
+			if (s->tmp[i][j] == -1)
 				return (1);
 			j++;
 		}
@@ -387,7 +472,7 @@ void fill_distance(t_info *s)
 	}
 }
 
-void fill_map(t_info *s)
+void fill_tmp(t_info *s)
 {
 	int i;
 	int j;
@@ -398,12 +483,12 @@ void fill_map(t_info *s)
 		j = 0;
 		while (j < s->width_map)
 		{
-			if (s->map[i][j] == '.')
-				s->map[i][j] = -1;
-			if (s->map[i][j] == s->my || s->map[i][j] == s->my + 32)
-				s->map[i][j] = -2;
-			if (s->map[i][j] == s->other || s->map[i][j] == s->other + 32)
-				s->map[i][j] = 0;
+			if (s->tmp[i][j] == '.')
+				s->tmp[i][j] = -1;
+			if (s->tmp[i][j] == s->my || s->tmp[i][j] == s->my + 32)
+				s->tmp[i][j] = -2;
+			if (s->tmp[i][j] == s->other || s->tmp[i][j] == s->other + 32)
+				s->tmp[i][j] = 0;
 			j++;
 		}
 		i++;
@@ -442,7 +527,7 @@ void check_size_plateau(char *buff, t_info *s)
 		ft_strdel(&buff);
 		i++;
 	}
-	fill_map(s);
+	fill_tmp(s);
 	fill_distance(s);
 	// get_next_line(0, &buff);
 	// if (!ft_strncmp(buff, "Piece ", 6))
