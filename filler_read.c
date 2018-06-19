@@ -249,13 +249,8 @@ int check_in_the_map(int x, int y, t_info *s)
 					return (0);
 				if (s->map[y][x] == s->my || s->map[y][x] == s->my + 32)
 				{
-					// s->map[y][x] = s->tmp[y][x];
 					count++;
 				}
-				// if (check_coord_in_map(y, x) == 1)
-					// y = s->height_map - 1;
-				// if (check_coord_in_map(y, x) == 2)
-					// x = s->width_map - 1;
 				if (count > 1)
 					return (0);
 			}
@@ -267,13 +262,12 @@ int check_in_the_map(int x, int y, t_info *s)
 	}
 	if (count == 1)
 	{
-		// s->check_coord++;
 		return (1);
 	}
 	return (0);
 }
 
-int count_coord_one(s, int y, int x)
+int count_coord(t_info *s, int y, int x)
 {
 	int weight;
 	int i;
@@ -287,7 +281,7 @@ int count_coord_one(s, int y, int x)
 		while (j < s->width_fig)
 		{
 			if (s->fig[i][j] == '*')
-				weight += s->tmp[y][x];
+				weight += s->tmp[y + 1][x + 1];
 			j++;
 		}
 		i++;
@@ -295,29 +289,7 @@ int count_coord_one(s, int y, int x)
 	return (weight);
 }
 
-int count_coord_second(s, int y, int x)
-{
-	int weight;
-	int i;
-	int j;
-
-	i = 0;
-	weight = 0;
-	while (i < s->height_fig)
-	{
-		j = 0;
-		while (j < s->width_fig)
-		{
-			if (s->fig[i][j] == '*')
-				weight += s->tmp[s->coord_y][s->coord_x];
-			j++;
-		}
-		i++;
-	}
-	return (weight);
-}
-
-int check_best_coord(t_info *s, int y, int x)
+void check_best_coord(t_info *s, int y, int x)
 {
 	int a;
 	int b;
@@ -326,8 +298,11 @@ int check_best_coord(t_info *s, int y, int x)
 	b = 0;
 	if (s->check_coord == 1)
 	{
-		a = count_coord_one(s, int y, int x);
-		b = count_coord_second(s);
+		if (count_coord(s, y, x) > count_coord(s, s->coord_y, s->coord_x))
+		{
+			s->coord_y = y;
+			s->coord_x = x;
+		}
 	}
 	else
 	{
@@ -335,30 +310,37 @@ int check_best_coord(t_info *s, int y, int x)
 		s->coord_x = x;
 		s->check_coord = 1;
 	}
-		
 }
 
 void walk_in_the_map(t_info *s)
 {
 	int y = 0;
+	int x;
 	s->check_coord = 0;
 
 	while (y <= s->height_map - s->height_fig)
 	{
-		int x = 0;
+		x = 0;
 		while (x <= s->width_map - s->width_fig)
 		{
 			if (check_in_the_map(x, y, s) == 1)
 			{
 				check_best_coord(s, y, x);
-				// ft_printf("%d %d\n", y, x);
-				// return ;
+				dprintf(fd, "%d %d\n", s->coord_y, s->coord_x);
+				ft_printf("%d %d\n", s->coord_y, s->coord_x);
+				return ;
 			}
 			x++;
 		}
 		y++;
 	}
-	ft_printf("%d %d\n", 0, 0);
+	// if (s->check_coord == 1)
+	// {
+	// 	dprintf(fd, "%d %d\n", s->coord_y, s->coord_x);
+	// 	ft_printf("%d %d\n", s->coord_y, s->coord_x);
+	// }
+	// else
+	// ft_printf("%d %d\n", 0, 0);
 }
 
 
@@ -381,19 +363,6 @@ void check_figure(char *buff, t_info *s)
 		i++;
 	}
 	s->fig[i] = NULL;
-	// print_map_fig(s->fig, s->height_fig, s->width_fig);
-	// print_map_fig(s->map, s->height_map, s->width_map);
-	// i = 0;
-	// printf("\nfig>>>\n");
-	// while (i < s->height_fig)
-	// {
-	// 	printf("\n%s\n", s->fig[i]);
-	// 	i++;
-	// }
-	// printf("\ns->height_fig>>>%d\n", s->height_fig);
-	// printf("\ns->width_fig>>>%d\n", s->width_fig);
-	// printf("\ns->height_map>>>%d\n", s->height_map);
-	// printf("\ns->width_map>>>%d\n", s->width_map);
 	walk_in_the_map(s);
 }
 
@@ -423,20 +392,20 @@ void make_digits(t_info *s, int d)
 		}
 		i++;
 	}
-	i = 0;
-	j = 0;
-	while (i < s->height_map)
-	{
-		j = 0;
-		while (j < s->width_map)
-		{
-			dprintf(fd, "%3d", s->tmp[i][j]);
-			j++;
-		}
-		i++;
-		write(fd, "\n", 1);
-	}
-	write(fd, "\n", 1);
+	// i = 0;
+	// j = 0;
+	// while (i < s->height_map)
+	// {
+	// 	j = 0;
+	// 	while (j < s->width_map)
+	// 	{
+	// 		dprintf(fd, "%3d", s->tmp[i][j]);
+	// 		j++;
+	// 	}
+	// 	i++;
+	// 	write(fd, "\n", 1);
+	// }
+	// write(fd, "\n", 1);
 }
 
 
@@ -493,19 +462,6 @@ void fill_tmp(t_info *s)
 		}
 		i++;
 	}
-	// i = 0;
-	// j = 0;
-	// while (i < s->height_map)
-	// {
-	// 	j = 0;
-	// 	while (j < s->width_map)
-	// 	{
-	// 		dprintf(fd, "%d", s->map[i][j]);
-	// 		j++;
-	// 	}
-	// 	i++;
-	// 	write(fd, "\n", 1);
-	// }
 }
 
 void check_size_plateau(char *buff, t_info *s)
@@ -555,23 +511,19 @@ int main(void)
 	cl_st(&s);
 	char *buff;
 
-	// fd = open("tat", O_RDONLY);
 	fd = open("vika3", O_RDWR | O_APPEND);
 	while (get_next_line(0, &buff) > 0)
 	{
 		if (!ft_strncmp(buff, "$$$ exec ", 9))
 		{
-			// write(fd, "\nif1\n", 5);
 			ft_check_name(buff, &s);
 		}
 		if (!ft_strncmp(buff, "Plateau ", 8))
 		{
-			// write(fd, "\nif2\n", 5);
 			check_size_plateau(buff, &s);
 		}
 		if (!ft_strncmp(buff, "Piece ", 6))
 		{
-			// write(fd, "\nif3\n", 5);
 			check_figure(buff, &s);
 		}
 	}
