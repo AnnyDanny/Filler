@@ -66,25 +66,25 @@ void print_map_fig(char **map, int height, int width)
 // 	return (0);
 // }
 
-// void check_position_in_map(t_info *s)
-// {
-// 	//write(fd, "\nok4\n", 5);
-// 	if (s->my == 'O')
-// 	{
-// 		if (s->start_o_y < s->start_x_y)
-// 			s->position = 2;
-// 		else if (s->start_o_y > s->start_x_y)
-// 			s->position = 1;
-// 	}
-// 	if (s->my == 'X')
-// 	{
-// 		if (s->start_x_y < s->start_o_y)
-// 			s->position = 2;
-// 		else if (s->start_x_y > s->start_o_y)
-// 			s->position = 1;
-// 	}
+void check_position_in_map(t_info *s)
+{
+	//write(fd, "\nok4\n", 5);
+	if (s->my == 'O')
+	{
+		if (s->start_o_y < s->start_x_y)
+			s->position = 2;
+		else if (s->start_o_y > s->start_x_y)
+			s->position = 1;
+	}
+	if (s->my == 'X')
+	{
+		if (s->start_x_y < s->start_o_y)
+			s->position = 2;
+		else if (s->start_x_y > s->start_o_y)
+			s->position = 1;
+	}
 
-// }
+}
 
 // void check_start_position(t_info *s)
 // {

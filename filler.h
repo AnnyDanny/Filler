@@ -43,7 +43,7 @@ typedef struct	s_info
 	int			width_map;
 	int			height_map;
 	char 		**map;
-	char 		**tmp;
+	int 		**tmp;
 	int			width_fig;
 	int			height_fig;
 	char		**fig;

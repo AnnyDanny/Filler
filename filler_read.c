@@ -281,7 +281,7 @@ int count_coord(t_info *s, int y, int x)
 		while (j < s->width_fig)
 		{
 			if (s->fig[i][j] == '*')
-				weight += s->tmp[y + 1][x + 1];
+				weight += s->tmp[y + i][x + j];
 			j++;
 		}
 		i++;
@@ -291,6 +291,7 @@ int count_coord(t_info *s, int y, int x)
 
 void check_best_coord(t_info *s, int y, int x)
 {
+	// dprintf(fd, "%d", 12345);
 	int a;
 	int b;
 
@@ -298,7 +299,11 @@ void check_best_coord(t_info *s, int y, int x)
 	b = 0;
 	if (s->check_coord == 1)
 	{
-		if (count_coord(s, y, x) > count_coord(s, s->coord_y, s->coord_x))
+		// dprintf(fd, "%d", 12345);
+		a = count_coord(s, y, x);
+		b = count_coord(s, s->coord_y, s->coord_x);
+		// if (count_coord(s, y, x) < count_coord(s, s->coord_y, s->coord_x))
+		if (a < b)
 		{
 			s->coord_y = y;
 			s->coord_x = x;
@@ -310,6 +315,8 @@ void check_best_coord(t_info *s, int y, int x)
 		s->coord_x = x;
 		s->check_coord = 1;
 	}
+	// dprintf(fd, "%s\n", "checkkkkkk");
+	// dprintf(fd, "%d\n", s->check_coord);
 }
 
 void walk_in_the_map(t_info *s)
@@ -326,21 +333,22 @@ void walk_in_the_map(t_info *s)
 			if (check_in_the_map(x, y, s) == 1)
 			{
 				check_best_coord(s, y, x);
-				dprintf(fd, "%d %d\n", s->coord_y, s->coord_x);
-				ft_printf("%d %d\n", s->coord_y, s->coord_x);
-				return ;
+				// dprintf(fd, "%d %d\n", s->coord_y, s->coord_x);
+				// dprintf(fd, "%d %d\n", y, x);
+				// ft_printf("%d %d\n", y, x);
+				// return ;
 			}
 			x++;
 		}
 		y++;
 	}
-	// if (s->check_coord == 1)
-	// {
-	// 	dprintf(fd, "%d %d\n", s->coord_y, s->coord_x);
-	// 	ft_printf("%d %d\n", s->coord_y, s->coord_x);
-	// }
-	// else
-	// ft_printf("%d %d\n", 0, 0);
+	if (s->check_coord == 1)
+	{
+		// dprintf(fd, "%d %d\n", s->coord_y, s->coord_x);
+		ft_printf("%d %d\n", s->coord_y, s->coord_x);
+	}
+	else
+		ft_printf("%d %d\n", 0, 0);
 }
 
 
@@ -447,17 +455,17 @@ void fill_tmp(t_info *s)
 	int j;
 
 	i = 0;
+	s->tmp = (int**)malloc(sizeof(int*) * s->height_map);
 	while (i < s->height_map)
 	{
 		j = 0;
+		s->tmp[i] = (int*)malloc(sizeof(int) * s->width_map);
 		while (j < s->width_map)
 		{
-			if (s->tmp[i][j] == '.')
-				s->tmp[i][j] = -1;
-			if (s->tmp[i][j] == s->my || s->tmp[i][j] == s->my + 32)
-				s->tmp[i][j] = -2;
-			if (s->tmp[i][j] == s->other || s->tmp[i][j] == s->other + 32)
+			if (s->map[i][j] == s->other || s->map[i][j] == s->other + 32)
 				s->tmp[i][j] = 0;
+			else
+				s->tmp[i][j] = -1;
 			j++;
 		}
 		i++;
@@ -474,16 +482,15 @@ void check_size_plateau(char *buff, t_info *s)
 	get_next_line(0, &buff);
 	ft_strdel(&buff);
 	s->map = (char**)malloc(sizeof(char*) * (s->height_map + 1));
-	s->tmp = (char**)malloc(sizeof(char*) * (s->height_map + 1));
 	while (i < s->height_map)
 	{
 		get_next_line(0, &buff);
 		s->map[i] = ft_strdup(buff + 4);
-		s->tmp[i] = ft_strdup(buff + 4);
 		ft_strdel(&buff);
 		i++;
 	}
 	fill_tmp(s);
+	// print_map_fig(s->tmp, s->height_map, s->width_map);
 	fill_distance(s);
 	// get_next_line(0, &buff);
 	// if (!ft_strncmp(buff, "Piece ", 6))
